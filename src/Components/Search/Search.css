@@ -1,0 +1,48 @@
+
+.search{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.search-head{
+    margin-top: 10px;
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 25px;
+}
+
+.formcontrol{
+    width: 250px;
+}
+
+.search-box{
+    width: 400px;
+    /* background-color: red; */
+}
+
+.search-label{
+    background-color: rgb(222, 223, 226);
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    border: none;
+
+}
+
+.search-type{
+    height: 30px;
+    line-height: 30px; 
+    font-size: .5em;
+    text-align: left;
+}
+
+.search-type-item{
+    height: 20px;
+    line-height: 20px;    
+    text-align: left;
+}

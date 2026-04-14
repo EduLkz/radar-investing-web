@@ -1,0 +1,36 @@
+.login{
+    min-width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.username, .password{
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.loginInput{
+    width: 200px;
+}
+
+.loginButton{
+    margin-top: 15px;
+    width: 300px;
+    border: none;
+    height: 25px;
+    cursor: pointer;
+    color: #282c34;
+    font-weight: bold;
+}
+
+.loginButton:hover{
+    background-color: #b7caf0;
+}
+
+.loginButton:active{
+    background-color: #282c34;
+    color: white;
+}

@@ -1,0 +1,7 @@
+.wallet-stocks{
+    display: flex;
+    gap: 15px;
+    margin: 10px;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}

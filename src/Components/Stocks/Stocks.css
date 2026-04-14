@@ -1,0 +1,36 @@
+.positive{
+    color: rgb(0, 184, 0);
+    font-weight: bold;
+}
+
+.negative{
+    color: red;
+    font-weight: bold;
+}
+
+.stock{
+    display: flex;
+    width: 450px;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.075);
+    border-radius: 5px;
+    -webkit-box-shadow: 3px 5px 9px 5px rgba(0,0,0,0.26); 
+    box-shadow: 3px 5px 9px 5px rgba(0,0,0,0.26);
+}
+
+.stock-value{
+    display: flex;
+}
+
+.stock-btn{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    align-self: flex-start;
+    padding: 20px 5px;
+}
+.stock-info{
+    flex-grow: 2
+}
