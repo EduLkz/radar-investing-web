@@ -1,19 +1,51 @@
 
-.search{
+.main-search{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-.search-head{
-    margin-top: 10px;
+.search{
     display: flex;
-    height: 40px;
-    line-height: 40px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #23262b;
+    padding: 50px 0;
+    width: 100vw;
+}
+.search-head{
+    /* margin-top: 10px; */
+    display: flex;
+    flex-direction: column;
+    /* height: 140px; */
+    /* line-height: 40px; */
     justify-content: center;
     align-items: center;
     text-align: center;
-    gap: 25px;
+    gap: 8px;
+    /* background-color: blueviolet; */
+}
+
+.search-head h2, input{
+    margin: 0;
+}
+
+.search-head input{
+    
+    width: 350px;
+    height: 50px;
+    line-height: 50px;
+    border: none;
+    border-radius: 35px;
+    padding: 2px 18px;
+}
+
+.search-head button{
+    margin-top: 10px;
+    width: 343px;
+    border: none;
+    padding: 4px;
 }
 
 .formcontrol{
@@ -35,14 +67,255 @@
 }
 
 .search-type{
-    height: 30px;
-    line-height: 30px; 
-    font-size: .5em;
+    display: flex;
+    /* background-color: green; */
+    width: 350px;
+    height: 25px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.search-type-button{
+    display: flex;
+    width: 100px;
+    line-height: 15px;
+    height: 15px;
+    margin: 15px 35px;
+    border: none;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-head-top{
+    /* background-color: aqua; */
+    width: 50%;
+    height: 250px;
+    justify-content: center;
+    align-content: center;
+    border-radius: 5px;
+}
+
+.search-type-button input {
+    box-sizing: border-box;
+    appearance: none;
+    background: #3a414e;
+    /* border: 3px solid white; */
+    width: 150px;
+    height: 22px;
+    border-radius: 0;
+    position: absolute;
+    cursor: pointer;
+    color: red;
+}
+
+.search-type-button input:checked {
+    background: #497cda;
+}
+
+.search-type-button label {
+    z-index: 2;
+    color: white;
+    pointer-events: none; 
+}
+
+.search-result-symbol{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin: 0 10%;
+    gap: 80px;
+}
+
+.search-result-company{
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.stocks-result{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+}
+
+.currencies{
+    width: 100%;
+    margin: 0;
+    padding: 2px 0;
+    height: 50px;
+    background-color: black;
+    display: flex;
+    overflow: hidden;
+}
+
+.currencies-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 40s linear infinite;
+    gap: 10px; 
+}
+
+.currencies-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.currency{
+    display: flex;
+    font-weight: bold;
+    justify-content: space-between;
+    margin: 0 10px;
+    padding: 0 5px;
+}
+
+.currency p{
+    margin-right: 10px;
+}
+
+.currency-name{
+    color: rgb(198, 208, 218);
+}
+
+.positive{
+    color: rgb(0, 255, 0);
+}
+
+.negative{
+    color: rgb(255, 0, 0);
+}
+
+.news{
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 21px;
+    margin-top: 50px;
+    width: 90%;
+    /* background-color: red; */
+    position: relative;
+
+}
+
+
+
+
+.news-link{
+    cursor: pointer;
+    width: 600px;
+    text-decoration: none;
+    text-align: left;
+    color: rgb(218, 229, 233);
+}
+
+
+.news-img{
+    width: 250px;
+}
+
+.news-summary, .news-source, .news-date{
+    margin: 0;
+}
+
+.news-summary{
+    text-align: justify;
+    /* background-color: palevioletred; */
+    min-height: 70px;
+}
+
+.news-title{
+    margin-bottom: 0;
+}
+
+.news-extra-info{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: bold;
+    color: #686872;
+    /* background-color: khaki; */
+}
+
+.news-info{
+    margin-left: 20px;
+    /* background-color: firebrick; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.news-div{
+    display: flex;
+}
+
+
+
+
+
+.news-link-main{
+    display: block;        /* 1. Essencial para a tag <a> aceitar tamanho */
+    width: 100%;           /* Ocupa a largura total do container onde ele está */
+    height: 450px;         /* 2. Define a altura fixa que você deseja para o destaque */
+    margin-bottom: 50px;
+    text-decoration: none; /* Remove o sublinhado padrão de links */
     text-align: left;
 }
 
-.search-type-item{
-    height: 20px;
-    line-height: 20px;    
-    text-align: left;
+.news-div-first, .news-link-first {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.news-img-first {
+    width: 100%;
+    height: 100%;
+    min-height: 150px;
+    object-fit: cover;
+    display: block;
+}
+
+.news-info-first {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+    color: white; 
+    padding: 20px; 
+    box-sizing: border-box; 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.news-title-first {
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-size: 200%;
+}
+
+.news-source-first,
+.news-date-first {
+    color: #afafaf;
+    font-weight: bolder;
+    margin: 0;
 }

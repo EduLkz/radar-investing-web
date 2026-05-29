@@ -1,7 +1,97 @@
+.wallet{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .wallet-stocks{
     display: flex;
     gap: 15px;
     margin: 10px;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    /* background-color: red; */
+}
+
+.wallet-info{
+    display: flex;
+    flex-direction: row;
+    background-color: #444c5c; 
+    justify-content: space-between;
+    margin: 10px 5%;
+    padding: 5px 50px;
+    border-radius: 2px;
+}
+
+.info-values, .info-values p{
+    margin: 0;
+}
+
+.info-values{
+    padding: 8px 0;
+}
+
+
+.wallet-options{
+    display: flex;
+    width: 80%;
+    height: 35px;
+    justify-content: space-around;
+    align-items: center;
+    gap: 15px;
+}
+
+.wallet-options-head{
+    /* margin-top: 10px; */
+    display: flex;
+    flex-direction: column;
+    /* height: 140px; */
+    /* line-height: 40px; */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    height: 100%;
+}
+
+
+.wallet-options-button{
+    display: flex;
+    flex-grow: 1;
+    line-height: 15px;
+    border: none;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background-color: aqua;
+    position: relative;
+    flex-grow: 1;
+    height: 100%;
+
+}
+
+
+.wallet-options-button input {
+    box-sizing: border-box;
+    appearance: none;
+    background: #3a414e;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    position: absolute;
+    cursor: pointer;
+    color: red;
+
+    flex-grow: 1;
+    line-height: 15px;
+}
+
+.wallet-options-button input:checked {
+    background: #497cda;
+}
+
+.wallet-options-button label {
+    z-index: 2;
+    color: white;
+    pointer-events: none; 
 }

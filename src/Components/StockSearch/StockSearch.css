@@ -8,7 +8,7 @@
     font-weight: bold;
 }
 
-.stock{
+.stock-search{
     display: flex;
     min-width: 80%;
     max-height: 220px;
@@ -22,11 +22,11 @@
     /* box-shadow: 3px 5px 9px 5px rgba(0,0,0,0.26); */
 }
 
-.stock-info{
+.stock-search-info{
     width: 100%;
 }
 
-.stock-info-sub{
+.stock-search-info-sub{
     display: flex;
     height: 50px;
     width: 100%;
@@ -34,7 +34,7 @@
     justify-content: space-around;
 }
 
-.stock-value{
+.stock-search-value{
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -42,17 +42,17 @@
     width: 100%;
 }
 
-.stock-value p{
+.stock-search-value p{
     margin: 0;
 }
 
-.stock-value-title{
+.stock-search-value-title{
     display: flex;
     margin: 0;
 }
 
 
-.stock-btn{
+.stock-search-btn{
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -60,6 +60,6 @@
     padding: 20px 5px;
 }
 
-.stock-title{
+.stock-search-title{
     margin: 5px;
 }
