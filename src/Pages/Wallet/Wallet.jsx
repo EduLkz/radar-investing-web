@@ -1,25 +1,38 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Stocks from '../../Components/Stocks/Stocks'
 import './Wallet.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import FeatherIcon from 'feather-icons-react'
 import { useNavigate } from 'react-router';
 import StockSell from '../../Components/ModalWindows/StockSell/StockSell'
+import { getMonthlyProfit, verifySession } from '../../api/api'
+import StockChart from '../../Components/JsonLineChart'
+import { userLogin, userLogoff } from '../../Components/features/User/userSlice'
 
 export default function Wallet() {
-
+  
+  const dispatch = useDispatch()
   const userWallet = useSelector((state) => state.user.wallet)
   const userStocks = useSelector((state) => state.user.stocks)
   const user = useSelector((state) => state.user)
 
-
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [symbolInfo, setSymbolInfo] = useState(null); 
   const [searchType, setSearchType] = useState(0);
+  const [monthlyProfit, setMonthlyProfit] = useState([]);
     
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    loadBalance()
+  }, [])
+
+  
+
+  const loadBalance = async() => {
+    setMonthlyProfit(await getMonthlyProfit(user.info.email))
+  }
 
   const handleClickBuy = () => {
       navigate('/');
@@ -92,7 +105,10 @@ export default function Wallet() {
         <button className='wallet-options-button' onClick={handleClickSell}> Vender </button>
         <button className='wallet-options-button' onClick={handleClickBuy}> Comprar </button>
       </div> */}
-
+      <div className="monthly-profit">
+        <h3>Lucro Mensal</h3>
+        <StockChart data={monthlyProfit} />
+      </div>
 
       <div className='wallet-options-head'>
         <div className="wallet-options">
@@ -110,7 +126,7 @@ export default function Wallet() {
 
 
 
-      <h3 style={{marginBottom:0}}>Ações</h3>
+      <h3 style={{marginBottom:0}}>Meus Ativos</h3>
       <div className="wallet-stocks">
         {
           userStocks.length > 0 ? (<>

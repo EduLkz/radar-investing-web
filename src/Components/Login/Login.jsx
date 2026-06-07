@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addUserInfo, userLogin, updateWallet, updateStocks } from '../features/User/userSlice';
+import { addUserInfo, userLogin, updateWallet, updateStocks, userLogoff } from '../features/User/userSlice';
 import './Login.css'
 import { useNavigate } from 'react-router';
-import { updateUserStocksInfo, updateWalletInfo } from '../../api/api'
+import { updateUserStocksInfo, updateWalletInfo, userLoginDB, verifySession } from '../../api/api'
 
 export default function Login() {
     const navigate = useNavigate()
@@ -14,17 +14,46 @@ export default function Login() {
         cpf: '11111111111'
     }
 
+    const dispatch = useDispatch();
+
+    const [loginEmail, setLoginEmail] = useState('edu@teste.com')
+    const [loginPassword, setLoginPassword] = useState(123456)
+
     const userStocks = useSelector((state) => state.user.stocks)
-    const userinfo = useSelector((state) => state.user)
-    const userinfo2 = useSelector((state) => state.info)
+    const userinfo = useSelector((state) => state.user.info)
+
+    useEffect(() => {
+      const restoreSession = async () => {
+          const storedToken = localStorage.getItem('@radarinvest:token');
+          if(storedToken){
+              const validSession = await verifySession(storedToken);
+              console.log(validSession)
+              if(validSession.length === 0)
+                dispatch(userLogoff)
+              else{
+                dispatch(await addUserInfo(validSession))
+                dispatch(await userLogin());
+                updateLoggedUserInfo(validSession.email)
+              }
+          }else{
+              dispatch(userLogoff())
+          }
+      }
+      restoreSession();
+      }, [dispatch]);
 
 
     const submitHandle = async(e) =>{
         e.preventDefault();
-        dispatch(userLogin());
-        dispatch(addUserInfo(userLogMock))
+        const userLogged = await userLoginDB(loginEmail, loginPassword)
+        dispatch(await userLogin());
+        dispatch(await addUserInfo(userLogged))
 
-        const wallet = await updateWalletInfo(userLogMock.email)
+        updateLoggedUserInfo(loginEmail)
+    }
+
+    const updateLoggedUserInfo = async (loggedEmail) => {
+        const wallet = await updateWalletInfo(loggedEmail)
         const updatedWallet = {
             balance: wallet[0],
             performance: wallet[1],
@@ -35,17 +64,14 @@ export default function Login() {
         
         dispatch(updateWallet(updatedWallet))
         
-        const stocks = await updateUserStocksInfo(userLogMock.email, updatedWallet['variation_details'])
+        const stocks = await updateUserStocksInfo(loggedEmail, updatedWallet['variation_details'])
         await dispatch(updateStocks(stocks))
     
         console.log(userStocks);
         console.log(userinfo);
-        console.log(userinfo2);
 
         navigate('/Wallet')
     }
-
-    const dispatch = useDispatch();
 
 
   return (
@@ -53,11 +79,11 @@ export default function Login() {
         <form action="submit" method="post" onSubmit={(e) => submitHandle(e)}>
             <div className="username">
                 <label>User</label>
-                <input type='text' minLength={5} value={'edu@teste.com'} className='loginInput'></input>
+                <input type='text' minLength={5} defaultValue={'edu@teste.com'} className='loginInput'></input>
             </div>
             <div className="password">
                 <label>Senha</label>
-                <input type='password' minLength={8} value={12345678} className='loginInput'></input>
+                <input type='password' minLength={8} defaultValue={123456} className='loginInput'></input>
             </div>
             <button formAction='submit' className='loginButton'>Logar</button>
         </form>

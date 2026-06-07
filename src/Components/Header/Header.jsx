@@ -1,18 +1,22 @@
 import React, { useEffect } from 'react'
 import "./Header.css"
-import { NavLink } from 'react-router'
+import { NavLink, useNavigate } from 'react-router'
 import FeatherIcon from 'feather-icons-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { userLogoff } from '../features/User/userSlice'
+import { userLogin, userLogoff } from '../features/User/userSlice'
+import { verifySession } from '../../api/api'
 
 export default function Header() {
-  const isLogged = useSelector((state) => state.user.logged)
-  const dispatch = useDispatch()
-  const userInfo = useSelector((state) => state.user.info)
+    const isLogged = useSelector((state) => state.user.logged)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const userInfo = useSelector((state) => state.user.info)
     
-  useEffect(() => {
-    console.log(userInfo.user)
-  }, [isLogged])
+    const handleLogoff = () => {
+        dispatch(userLogoff())
+        navigate('/Login')
+    }
+
 
   return (
     <div className='nav-header'>
@@ -30,6 +34,7 @@ export default function Header() {
                 <NavLink className='nav-link' to={isLogged ? '/Profile' : '/Login'}>Perfil</NavLink>
             </li>
         </ul>
+        <p>{isLogged ? 'Logado' : 'Nao Logado'}</p>
         <div className="log">
             {
                 !isLogged ? (
@@ -40,7 +45,7 @@ export default function Header() {
                     </>
                 ) : (
                     <>  
-                        <button onClick={ () => dispatch(userLogoff())} className='nav-btn logof'> 
+                        <button onClick={handleLogoff} className='nav-btn logof'> 
                             <FeatherIcon icon='log-out' stroke='white'/>
                         </button>
                     </>

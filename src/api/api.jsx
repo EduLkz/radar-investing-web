@@ -4,6 +4,52 @@ const api = axios.create({
     baseURL: 'http://localhost:5000',
 })
 
+export const userLoginDB = async (email, password) => {
+    try {
+        const res = await api.post('/login-user', {
+            email: email,
+            password: password,
+        })
+
+        const token = res.data.token;
+
+        const resValidation = await api.post('/validate-login', {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        localStorage.setItem('@radarinvest:token', token);
+        const data = resValidation.data;
+        return data
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const verifySession = async (token) => {
+    try {
+        const res = await api.post('/validate-login', {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+
+        console.log(res)
+
+        if (res.status === 200) {
+            return res.data
+        } 
+        
+    } catch (error) {
+        console.log("Sessão inválida ou expirada. Efetuando logout...");
+        localStorage.removeItem('@radarinvest:token');
+        return []
+    }
+}
+
 export const searchCompany = async (company) => {
     try {
         const res = await api.post('/search-company', {
@@ -49,7 +95,6 @@ export const getSymbolLast = async (Symbol) => {
             "value": Symbol
         });
 
-        console.log(res.data)
         return Object.values(res.data);
 
         // api.post('/search-daily', {
@@ -76,7 +121,6 @@ export const addSymbol = async (email, symbol, qnt, close) => {
         if(res.status !== 200){
             throw new Error(`${res.data}, ${res.status}`);
         }
-        console.log(res.data)
         
     } catch (error) {
         console.log(error)
@@ -91,7 +135,6 @@ export const removeSymbol = async (symbol) => {
         if(res.status !== 200){
             throw new Error(`${res.data}, ${res.status}`);
         }
-        console.log(res.data)
         
     } catch (error) {
         console.log(error)
@@ -117,7 +160,6 @@ export const updateWalletInfo = async (email) => {
         const resBalance = await api.post('/api/balance', {
             email: email
         })
-        console.log(resVar)
         
         const wallet = [
             resBalance.data['balance'],
@@ -126,7 +168,6 @@ export const updateWalletInfo = async (email) => {
             resProf.data['profit'],
             resVar.data['variation_details']
         ]
-        console.log(wallet)
         return wallet
 
     } catch (error) {
@@ -143,8 +184,6 @@ export const updateUserStocksInfo = async (email, variation_details) => {
 
         const userStocks = res.data['acoes']
 
-        console.log(variation_details)
-        console.log(userStocks)
 
        userStocks.forEach((stock) => {
             // Utiliza o .find() pois variation_details é um Array
@@ -189,7 +228,6 @@ export const getCurrencies = async () => {
         if(res.status !== 200){
             throw new Error(`${res.data}, ${res.status}`);
         }
-        console.log(res.data)
 
         return res.data
         
@@ -208,7 +246,25 @@ export const getNews = async () => {
 
         const data = res.data
         data.length = 10
-        console.log(data[0])
+        return data
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export const getMonthlyProfit = async (email) => {
+    try {
+        const res= await api.post('/api/stocks/chart', {
+            email: email
+        })
+        if(res.status !== 200){
+            throw new Error(`${res.data}, ${res.status}`);
+        }
+
+        const data = res.data
+
         return data
         
     } catch (error) {

@@ -18,8 +18,10 @@ export const userSlice = createSlice({
     reducers: {
         userLogin: (state) => {
             state.logged = true
+            
         },
         userLogoff: (state) => {
+            localStorage.removeItem('@radarinvest:token');
             state.logged = false
             state.info = []
             state.wallet = {
