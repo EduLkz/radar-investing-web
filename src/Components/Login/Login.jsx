@@ -7,12 +7,6 @@ import { updateUserStocksInfo, updateWalletInfo, userLoginDB, verifySession } fr
 
 export default function Login() {
     const navigate = useNavigate()
-    const userLogMock = {
-        "user": 'Eduardo',
-        email: 'edu@teste.com',
-        phone:'11111111111',
-        cpf: '11111111111'
-    }
 
     const dispatch = useDispatch();
 
@@ -61,6 +55,7 @@ export default function Login() {
             profit: wallet[3],
             variation_details: wallet[4],
         }
+        
         
         dispatch(updateWallet(updatedWallet))
         

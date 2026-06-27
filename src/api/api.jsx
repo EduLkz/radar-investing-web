@@ -37,8 +37,6 @@ export const verifySession = async (token) => {
         })
 
 
-        console.log(res)
-
         if (res.status === 200) {
             return res.data
         } 
@@ -118,7 +116,8 @@ export const addSymbol = async (email, symbol, qnt, close) => {
             quantity: qnt,
             price: close
         })
-        if(res.status !== 200){
+        if(res.status !== 200 || res.status !== 201){
+            console.log(`${res.data}, ${res.status}`)
             throw new Error(`${res.data}, ${res.status}`);
         }
         
@@ -160,6 +159,7 @@ export const updateWalletInfo = async (email) => {
         const resBalance = await api.post('/api/balance', {
             email: email
         })
+
         
         const wallet = [
             resBalance.data['balance'],
@@ -264,6 +264,46 @@ export const getMonthlyProfit = async (email) => {
         }
 
         const data = res.data
+
+        return data
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getPreviewSaleInfo = async (email, symbol, quantity) => {
+    try {
+        const res= await api.post('/api/stocks/preview-sale', {
+            'email': email,
+            'symbol': symbol,
+            'quantity': quantity
+        })
+        if(res.status !== 200){
+            throw new Error(`${res.data}, ${res.status}`);
+        }
+
+        const data = res.data.preview
+
+        return data
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getMakeSaleInfo = async (email, symbol, quantity) => {
+    try {
+        const res= await api.post('/api/stocks/make-sale', {
+            'email': email,
+            'symbol': symbol,
+            'quantity': quantity
+        })
+        if(res.status !== 200){
+            throw new Error(`${res.data}, ${res.status}`);
+        }
+
+        const data = res.data.preview
 
         return data
         

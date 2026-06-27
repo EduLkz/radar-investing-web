@@ -1,23 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../StockBuy/StockBuy';
-import { addSymbol } from '../../../api/api';
-import { useSelector } from 'react-redux';
+import { addSymbol, getMakeSaleInfo, getPreviewSaleInfo, updateUserStocksInfo, updateWalletInfo } from '../../../api/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateStocks } from '../../features/User/userSlice';
 
-const StockSell = ({ isOpen, onClose, stockData, onConfirmBuy }) => {
-    const userInfo = useSelector((state) => state.user.info)
+  const StockSell = ({ isOpen, onClose, stockData, onConfirmBuy }) => {
+  const userInfo = useSelector((state) => state.user.info)
+
+  const dispatch = useDispatch();
 
   const [quantity, setQuantity] = useState(1);
+  const [costPrice, setCostPrice] = useState(0);
+  const [profitValue, setProfitValue] = useState(0);
+  const [sellValue, setSellValue] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+      if(isOpen){
+        updateValues(parseFloat(custo_original_total), parseFloat(lucro_prejuizo), parseFloat(valor_bruto_venda));
+      }else{
+        setQuantity(1);
+      }
+    }, [isOpen])
 
   if (!isOpen || !stockData) return null;
 
-  const { symbol, open, high, low, close } = stockData;
+  const { custo_original_total, lucro_prejuizo, valor_bruto_venda, symbol, max_qnt } = stockData;
 
-  const openPrice = parseFloat(open) || 0;
-  const highPrice = parseFloat(high) || 0;
-  const lowPrice = parseFloat(low) || 0;
-  const closePrice = parseFloat(close) || 0;
-
+  const updateValues = (cost, profit, sell) => {
+    setCostPrice(cost)
+    setProfitValue(profit)
+    setSellValue(sell)
+  }
+  
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -25,24 +40,35 @@ const StockSell = ({ isOpen, onClose, stockData, onConfirmBuy }) => {
     }).format(value);
   };
 
-  const totalOrderValue = quantity * closePrice;
 
-  const handleBuy = async () => {
-    if (quantity <= 0) return;
-    
+  const handleUpdateQuantity = async(qnt) => {
+    setQuantity(qnt)
+    if(qnt > max_qnt || qnt < 0) return;
+    if(qnt === '' || qnt === null || qnt === undefined) return;
+    const preview = await getPreviewSaleInfo(userInfo.email, symbol, qnt)
+    updateValues(preview.custo_original_total, preview.lucro_prejuizo, preview.valor_bruto_venda)
+  }
+
+  const handleSell = async () => {
+    if(quantity > max_qnt || quantity < 0) return;
+    if(quantity === '' || quantity === null || quantity === undefined) return;
     setIsLoading(true);
     
-    await onConfirmBuy({
-      symbol: symbol,
-      quantity: Number(quantity),
-      price: closePrice
-    });
-    
-    setQuantity(1);
-    setIsLoading(false);
+    const sale = await getMakeSaleInfo(userInfo.email, symbol, quantity)
+    const wallet = await updateWalletInfo(userInfo.email)
+    const updatedWallet = {
+        balance: wallet[0],
+        performance: wallet[1],
+        variation: wallet[2],
+        profit: wallet[3],
+        variation_details: wallet[4],
+    }
+        
+            
+    const stocks = await updateUserStocksInfo(userInfo.email, updatedWallet['variation_details'])
+    await dispatch(updateStocks(stocks))
+    setIsLoading(false)
     onClose()
-
-    addSymbol(userInfo.email, symbol, quantity, closePrice)
   };
 
   return (
@@ -62,20 +88,21 @@ const StockSell = ({ isOpen, onClose, stockData, onConfirmBuy }) => {
         {/* Resumo de Mercado */}
         <div className="stockbuy-summary">
           <div className="summary-item">
-            <p className="summary-label">Open</p>
-            <p className="summary-value">{formatCurrency(openPrice)}</p>
+            <p className="summary-label">Custo original</p>
+            <p className="summary-value">{formatCurrency(costPrice)}</p>
+          </div>
+
+          <div className="summary-item">
+            <p className="summary-label">Quantidade a venda</p>
+            <p className="summary-value value-close">{(quantity)}/{max_qnt}</p>
           </div>
           <div className="summary-item">
-            <p className="summary-label">Close</p>
-            <p className="summary-value value-close">{formatCurrency(closePrice)}</p>
+            <p className="summary-label">Valor venda</p>
+            <p className="summary-value value-low">{formatCurrency(sellValue)}</p>
           </div>
           <div className="summary-item">
-            <p className="summary-label">Low</p>
-            <p className="summary-value value-low">{formatCurrency(lowPrice)}</p>
-          </div>
-          <div className="summary-item">
-            <p className="summary-label">High</p>
-            <p className="summary-value value-high">{formatCurrency(highPrice)}</p>
+            <p className="summary-label">Lucro</p>
+            <p className="summary-value value-high">{formatCurrency(profitValue)}</p>
           </div>
         </div>
 
@@ -86,17 +113,18 @@ const StockSell = ({ isOpen, onClose, stockData, onConfirmBuy }) => {
           <input
             type="number"
             min="1"
+            max={max_qnt}
             step="1"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => handleUpdateQuantity(e.target.value)}
             className="stockbuy-input"
             disabled={isLoading}
           />
         </div>
         <div className="stockbuy-total-group">
-          <span className="stockbuy-total-label">Total Order:</span>
+          <span className="stockbuy-total-label">Valor Total:</span>
           <span className="stockbuy-total-value">
-            {formatCurrency(totalOrderValue)}
+            {formatCurrency(sellValue)}
           </span>
         </div>
 
@@ -104,11 +132,11 @@ const StockSell = ({ isOpen, onClose, stockData, onConfirmBuy }) => {
         <div className="stockbuy-actions">
           
           <button
-            onClick={handleBuy}
+            onClick={handleSell}
             disabled={quantity <= 0 || isLoading}
             className="btn-confirm"
           >
-            {isLoading ? 'Processando...' : 'Confirmar Compra'}
+            {isLoading ? 'Processando...' : 'Confirmar Venda'}
           </button>
 
           <button

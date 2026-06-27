@@ -32,6 +32,7 @@ export default function Wallet() {
 
   const loadBalance = async() => {
     setMonthlyProfit(await getMonthlyProfit(user.info.email))
+    
   }
 
   const handleClickBuy = () => {
@@ -107,7 +108,9 @@ export default function Wallet() {
       </div> */}
       <div className="monthly-profit">
         <h3>Lucro Mensal</h3>
-        <StockChart data={monthlyProfit} />
+        {
+          monthlyProfit.length > 0 ? (<StockChart data={monthlyProfit} />) : (<h4>Sem registros</h4>)
+        }
       </div>
 
       <div className='wallet-options-head'>

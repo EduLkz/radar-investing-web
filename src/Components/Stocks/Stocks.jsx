@@ -3,9 +3,11 @@ import './Stocks.css'
 import FeatherIcon from 'feather-icons-react';
 import { useNavigate } from 'react-router';
 import StockSell from '../ModalWindows/StockSell/StockSell';
+import { getPreviewSaleInfo } from '../../api/api';
+import { useSelector } from 'react-redux';
 
 export default function Stocks( props ) {
-
+    const userInfo = useSelector((state) => state.user.info)
     const { symbol, qnt: qntStr, valueAvg: valueAvgStr, currentValue: currentValueStr, variation: variationStr, performance: performanceStr, profit: profitStr } = props;
 
     const qnt = parseFloat(qntStr) || 0;
@@ -25,14 +27,16 @@ export default function Stocks( props ) {
         navigate('/');
     }
 
-    const handleClickSell = () => {
+    const handleClickSell = async () => {
+        const previewInfo = await getPreviewSaleInfo(userInfo.email, symbol, 1);
+        console.log(previewInfo)
         setSymbolInfo({
-                symbol,
-                qnt,
-                valueAvg,
-                variation,
-                performance
-            });
+            custo_original_total: previewInfo.custo_original_total,
+            lucro_prejuizo: previewInfo.lucro_prejuizo,
+            valor_bruto_venda: previewInfo.valor_bruto_venda,
+            symbol: symbol,
+            max_qnt: qnt
+        });
         setIsModalOpen(true);
     }
 
