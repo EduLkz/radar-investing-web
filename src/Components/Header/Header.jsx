@@ -34,7 +34,7 @@ export default function Header() {
                 <NavLink className='nav-link' to={isLogged ? '/Profile' : '/Login'}>Perfil</NavLink>
             </li>
         </ul>
-        <p>{isLogged ? 'Logado' : 'Nao Logado'}</p>
+        {/* <p>{isLogged ? 'Logado' : 'Nao Logado'}</p> */}
         <div className="log">
             {
                 !isLogged ? (

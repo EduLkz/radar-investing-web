@@ -21,9 +21,11 @@ export const userLoginDB = async (email, password) => {
 
         localStorage.setItem('@radarinvest:token', token);
         const data = resValidation.data;
+        console.log(data)
         return data
         
     } catch (error) {
+        localStorage.removeItem('@radarinvest:token');
         console.log(error)
     }
 }
@@ -48,6 +50,77 @@ export const verifySession = async (token) => {
     }
 }
 
+export const userRegisterDB = async (nome, cpf, tel, email, password) => {
+    try {
+        const res = await api.post('/register-user', {
+            nome: nome,
+            tel: tel,
+            email: email,
+            cpf: cpf,
+            senha: password,
+        })
+
+        const data = res.data;
+
+        console.log(res)
+        return data
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const requestChangePassword = async (email) => {
+    try {
+        const res = await api.post('/request-reset-password', {
+            email: email
+        })
+
+        const data = res.data;
+
+        console.log(res)
+        return data
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export const userChangePassword = async (newPassword, token) => {
+    try {
+        const res = await api.post('/reset-password', {
+            novaSenha: newPassword,
+            token: token
+        })
+
+        const data = res.data;
+
+        console.log(res)
+        return data
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const userConfirmedChangePassword = async (email, password, newPassword) => {
+    try {
+        const res = await api.post('/reset-password-confirmed', {
+            email: email,
+            senha: password,
+            novaSenha: newPassword
+        })
+
+        const data = res.data;
+        console.log(res)
+        return data
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const searchCompany = async (company) => {
     try {
         const res = await api.post('/search-company', {
@@ -63,22 +136,13 @@ export const searchCompany = async (company) => {
 }
 
 export const searchDaily = async (Symbol) => {
-    // console.log(stockinfo)
-    // return stockinfo
+
     try {
         const res = await api.post('/search-daily', {
             "value": Symbol
         });
 
         return res.data;
-
-        // api.post('/search-daily', {
-        //     "value": Symbol
-        // }).then((res) => {
-        //     const data = res.data;
-        //     console.log(data)
-        //     return data
-        // })
         
     } catch (error) {
         console.log(error)
@@ -86,22 +150,12 @@ export const searchDaily = async (Symbol) => {
 }
 
 export const getSymbolLast = async (Symbol) => {
-    // console.log(stockinfo)
-    // return stockinfo
     try {
         const res = await api.post('/search-specific', {
             "value": Symbol
         });
 
         return Object.values(res.data);
-
-        // api.post('/search-daily', {
-        //     "value": Symbol
-        // }).then((res) => {
-        //     const data = res.data;
-        //     console.log(data)
-        //     return data
-        // })
         
     } catch (error) {
         console.log(error)
@@ -306,6 +360,25 @@ export const getMakeSaleInfo = async (email, symbol, quantity) => {
         const data = res.data.preview
 
         return data
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export const getEmailValidation = async (email, nome) => {
+    try {
+        const res= await api.post('/request-confirm-email', {
+            'email': email,
+            'nome': nome
+        })
+
+        if(res.status !== 200){
+            throw new Error(`${res.data}, ${res.status}`);
+        }
+
+        return res.status
         
     } catch (error) {
         console.log(error)

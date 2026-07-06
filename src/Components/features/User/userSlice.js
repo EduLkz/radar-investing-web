@@ -35,14 +35,13 @@ export const userSlice = createSlice({
         },
         addUserInfo: (state, action) => {
             state.info = action.payload
+            console.log(state.info.confirmado)
         },
         updateWallet: (state, action) => {
             state.wallet = action.payload
         },
         updateStocks: (state, action) => {
             state.stocks = action.payload
-            console.log(action.payload)
-            console.log(state.stocks)
         }
     }
 })
