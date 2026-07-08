@@ -1,16 +1,13 @@
-import React, { useEffect } from 'react'
-import "./Header.css"
-import { NavLink, useNavigate } from 'react-router'
 import FeatherIcon from 'feather-icons-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { userLogin, userLogoff } from '../features/User/userSlice'
-import { verifySession } from '../../api/api'
+import { NavLink, useNavigate } from 'react-router'
+import { userLogoff } from '../features/User/userSlice'
+import "./Header.css"
 
 export default function Header() {
     const isLogged = useSelector((state) => state.user.logged)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const userInfo = useSelector((state) => state.user.info)
     
     const handleLogoff = () => {
         dispatch(userLogoff())

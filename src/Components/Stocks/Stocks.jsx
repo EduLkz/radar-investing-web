@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
-import './Stocks.css'
 import FeatherIcon from 'feather-icons-react';
-import { useNavigate } from 'react-router';
-import StockSell from '../ModalWindows/StockSell/StockSell';
-import { getPreviewSaleInfo } from '../../api/api';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { getPreviewSaleInfo } from '../../api/api';
+import StockSell from '../ModalWindows/StockSell/StockSell';
+import './Stocks.css';
 
 export default function Stocks( props ) {
     const userInfo = useSelector((state) => state.user.info)
@@ -20,13 +19,6 @@ export default function Stocks( props ) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [symbolInfo, setSymbolInfo] = useState(null); 
     
-
-    const navigate = useNavigate()
-
-    const handleClickBuy = () => {
-        navigate('/');
-    }
-
     const handleClickSell = async () => {
         const previewInfo = await getPreviewSaleInfo(userInfo.email, symbol, 1);
         console.log(previewInfo)

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getCurrencies, getNews, searchCompany, searchDaily } from '../../api/api';
-import './Search.css';
-import Symbol from '../../Components/Symbol/Symbol'
-import StockChart from '../JsonLineChart'
-import stockinfo from '../../api/values.json'
+import Symbol from '../../Components/Symbol/Symbol';
+import StockChart from '../JsonLineChart';
 import StockSearch from '../StockSearch/StockSearch';
+import './Search.css';
 
 export default function Search() {
     const [searchType, setSearchType] = useState(0);
@@ -44,7 +43,6 @@ export default function Search() {
     const reserValues = () => {
         setStocks([]); 
         setStocksDaily(undefined); 
-        // console.log(`Stocks: ${typeof(stocks)} | Daily: ${typeof(stocksDaily)}`)
     }
 
 
@@ -77,16 +75,6 @@ export default function Search() {
         <div className="stocks-result">
                     {
                         searchType === 0  ? (
-                            // <Symbol key={`IBM`}
-                            //         symbol={"IBM"}
-                            //         desc={"INTL BUSINESS MACHINES CORP"}
-                            //         displaySymbol={"IBM"}
-                            //         type={"Common Stock"}
-                            //     />
-
-
-
-
                             stocks.length > 0 ? (
                                 <div className='search-result-company'>
                                     {stocks.map((s, idx) => (
@@ -104,7 +92,6 @@ export default function Search() {
                         ):(
                             stocksDaily !== undefined ? 
                             (
-                                // style={{ display: 'flex', flexDirection: 'row', gap: '50px' }}
                                 <div className='search-result-symbol'>
                                     <StockSearch
                                         symbol={searchValue}
@@ -116,7 +103,6 @@ export default function Search() {
                                     />
                                     <StockChart  data={stocksDaily} />
                                 </div>
-
 
                             ) : <></>
                         )
@@ -168,10 +154,9 @@ export default function Search() {
             {
                 news.length > 0 ?
                 news.map((n, idx) => (
-                        <a href="" className={idx === 0 ? "news-link-main" : "news-link"} key={n.id}>
+                        <a href={n.url} className={idx === 0 ? "news-link-main" : "news-link"} key={n.id}>
                             <div className={`news-div${idx === 0 ? '-first' : ''}`}>
                                 <img src={n.image} alt="" className={`news-img${idx === 0 ? '-first' : ''}`} />
-                                {/* <img src={n.image} alt="" className="news-img" /> */}
                                 <div className={`news-info${idx === 0 ? '-first' : ''}`}>
                                     <div className={`news-main-info${idx === 0 ? '-first' : ''}`}>
                                         <h4 className="news-title">{n.headline}</h4>

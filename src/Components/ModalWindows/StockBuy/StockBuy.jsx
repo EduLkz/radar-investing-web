@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import './StockBuy.css';
 import { addSymbol } from '../../../api/api';
 import { useSelector } from 'react-redux';
+import { useUpdateUserInfo } from '../../features/commom';
 
 const StockBuy = ({ isOpen, onClose, stockData, onConfirmBuy }) => {
-    const userInfo = useSelector((state) => state.user.info)
+  const userInfo = useSelector((state) => state.user.info)
 
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+
+  const updateLoggedUserInfo = useUpdateUserInfo()
 
   if (!isOpen || !stockData) return null;
 
@@ -43,6 +46,7 @@ const StockBuy = ({ isOpen, onClose, stockData, onConfirmBuy }) => {
     onClose()
 
     addSymbol(userInfo.email, symbol, quantity, closePrice)
+    updateLoggedUserInfo(userInfo.email)
   };
 
   return (

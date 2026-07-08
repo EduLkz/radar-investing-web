@@ -1,31 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import Stocks from '../../Components/Stocks/Stocks'
-import './Wallet.css'
-import { useDispatch, useSelector } from 'react-redux'
 import FeatherIcon from 'feather-icons-react'
-import { useNavigate } from 'react-router';
-import StockSell from '../../Components/ModalWindows/StockSell/StockSell'
-import { getMonthlyProfit, verifySession } from '../../api/api'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import StockChart from '../../Components/JsonLineChart'
-import { userLogin, userLogoff } from '../../Components/features/User/userSlice'
+import StockSell from '../../Components/ModalWindows/StockSell/StockSell'
+import Stocks from '../../Components/Stocks/Stocks'
+import { getMonthlyProfit } from '../../api/api'
+import './Wallet.css'
 
 export default function Wallet() {
   
-  const dispatch = useDispatch()
   const userWallet = useSelector((state) => state.user.wallet)
   const userStocks = useSelector((state) => state.user.stocks)
   const user = useSelector((state) => state.user)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // eslint-disable-next-line
   const [symbolInfo, setSymbolInfo] = useState(null); 
   const [searchType, setSearchType] = useState(0);
   const [monthlyProfit, setMonthlyProfit] = useState([]);
     
-
-  const navigate = useNavigate()
-
   useEffect(() => {
     loadBalance()
+    // eslint-disable-next-line
   }, [])
 
   
@@ -33,21 +29,6 @@ export default function Wallet() {
   const loadBalance = async() => {
     setMonthlyProfit(await getMonthlyProfit(user.info.email))
     
-  }
-
-  const handleClickBuy = () => {
-      navigate('/');
-  }
-
-  const handleClickSell = () => {
-      setSymbolInfo({
-              // symbol,
-              // open,
-              // high,
-              // low,
-              // close
-          });
-      setIsModalOpen(true);
   }
 
   return (
@@ -102,10 +83,6 @@ export default function Wallet() {
           </div>
         </div>
       </div>
-      {/* <div className="wallet-options">
-        <button className='wallet-options-button' onClick={handleClickSell}> Vender </button>
-        <button className='wallet-options-button' onClick={handleClickBuy}> Comprar </button>
-      </div> */}
       <div className="monthly-profit">
         <h3>Lucro Mensal</h3>
         {
@@ -155,7 +132,6 @@ export default function Wallet() {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)} 
             stockData={symbolInfo}
-            // onConfirmBuy={executeBuy} 
         />
     </div>
   )

@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import '../StockBuy/StockBuy';
-import { addSymbol, getMakeSaleInfo, getPreviewSaleInfo, updateUserStocksInfo, updateWalletInfo } from '../../../api/api';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getMakeSaleInfo, getPreviewSaleInfo, updateUserStocksInfo, updateWalletInfo } from '../../../api/api';
 import { updateStocks } from '../../features/User/userSlice';
+import { useUpdateUserInfo } from '../../features/commom';
+import '../StockBuy/StockBuy';
 
   const StockSell = ({ isOpen, onClose, stockData, onConfirmBuy }) => {
   const userInfo = useSelector((state) => state.user.info)
 
   const dispatch = useDispatch();
+  const updateLoggedUserInfo = useUpdateUserInfo()
 
   const [quantity, setQuantity] = useState(1);
   const [costPrice, setCostPrice] = useState(0);
@@ -21,6 +23,7 @@ import { updateStocks } from '../../features/User/userSlice';
       }else{
         setQuantity(1);
       }
+      // eslint-disable-next-line
     }, [isOpen])
 
   if (!isOpen || !stockData) return null;
@@ -54,7 +57,7 @@ import { updateStocks } from '../../features/User/userSlice';
     if(quantity === '' || quantity === null || quantity === undefined) return;
     setIsLoading(true);
     
-    const sale = await getMakeSaleInfo(userInfo.email, symbol, quantity)
+    await getMakeSaleInfo(userInfo.email, symbol, quantity)
     const wallet = await updateWalletInfo(userInfo.email)
     const updatedWallet = {
         balance: wallet[0],
@@ -69,6 +72,7 @@ import { updateStocks } from '../../features/User/userSlice';
     await dispatch(updateStocks(stocks))
     setIsLoading(false)
     onClose()
+    updateLoggedUserInfo(userInfo.email)
   };
 
   return (
@@ -128,7 +132,6 @@ import { updateStocks } from '../../features/User/userSlice';
           </span>
         </div>
 
-        {/* Botões */}
         <div className="stockbuy-actions">
           
           <button

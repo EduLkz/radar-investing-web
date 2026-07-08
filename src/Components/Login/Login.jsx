@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useNavigate } from 'react-router';
-import { updateUserStocksInfo, updateWalletInfo, userLoginDB, verifySession } from '../../api/api';
-import { addUserInfo, updateStocks, updateWallet, userLogin, userLogoff } from '../features/User/userSlice';
+import { useDispatch } from 'react-redux';
+import { NavLink } from 'react-router';
+import { userLoginDB, verifySession } from '../../api/api';
+import { useUpdateUserInfo } from '../features/commom';
+import { addUserInfo, userLogin, userLogoff } from '../features/User/userSlice';
 import './Login.css';
 
 export default function Login() {
-    const navigate = useNavigate()
+    const updateLoggedUserInfo = useUpdateUserInfo();
 
     const dispatch = useDispatch();
 
     const [loginEmail, setLoginEmail] = useState('edu_a.r@hotmail.com')
     const [loginPassword, setLoginPassword] = useState(123456789)
 
-    const userStocks = useSelector((state) => state.user.stocks)
-    const userinfo = useSelector((state) => state.user.info)
-
     useEffect(() => {
       const restoreSession = async () => {
-          const storedToken = localStorage.getItem('@radarinvest2:token');
+          const storedToken = localStorage.getItem('@radarinvest:token');
           if(storedToken){
               const validSession = await verifySession(storedToken);
               console.log(validSession)
@@ -50,34 +48,6 @@ export default function Login() {
             alert('Login falhou')
         }
     }
-
-    const updateLoggedUserInfo = async (loggedEmail) => {
-        try{
-            const wallet = await updateWalletInfo(loggedEmail)
-            const updatedWallet = {
-                balance: wallet[0],
-                performance: wallet[1],
-                variation: wallet[2],
-                profit: wallet[3],
-                variation_details: wallet[4],
-            }
-            
-            
-            dispatch(updateWallet(updatedWallet))
-            
-            const stocks = await updateUserStocksInfo(loggedEmail, updatedWallet['variation_details'])
-            await dispatch(updateStocks(stocks))
-        
-            console.log(userStocks);
-            console.log(userinfo);
-            navigate('/Wallet')
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
-
-
 
   return (
     <div className='login'>

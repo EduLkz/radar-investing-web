@@ -1,39 +1,15 @@
-import React, { useState } from 'react'
-import './StockSearch.css'
 import FeatherIcon from 'feather-icons-react';
-import { useNavigate } from 'react-router';
-import StockSell from '../ModalWindows/StockSell/StockSell';
+import './StockSearch.css';
 
 export default function StockSearch( props ) {
 
-    const { symbol, open: openStr, high: highStr, low: lowStr, close: closeStr, buy } = props;
+    const { symbol, open: openStr, high: highStr, low: lowStr, close: closeStr } = props;
 
     const open = parseFloat(openStr) || 0;
     const high = parseFloat(highStr) || 0;
     const low = parseFloat(lowStr) || 0;
     const close = parseFloat(closeStr) || 0;
     const percent = (close - open) / open * 100;
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [symbolInfo, setSymbolInfo] = useState(null); 
-    
-
-    const navigate = useNavigate()
-
-    const handleClickBuy = () => {
-        navigate('/');
-    }
-
-    const handleClickSell = () => {
-        setSymbolInfo({
-                symbol,
-                open,
-                high,
-                low,
-                close
-            });
-        setIsModalOpen(true);
-    }
 
     return (
         <div className='stock-search'>

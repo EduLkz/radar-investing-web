@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: process.env.REACT_APP_API_URL,
 })
 
 export const userLoginDB = async (email, password) => {
@@ -21,12 +21,12 @@ export const userLoginDB = async (email, password) => {
 
         localStorage.setItem('@radarinvest:token', token);
         const data = resValidation.data;
-        console.log(data)
+        
         return data
         
     } catch (error) {
-        localStorage.removeItem('@radarinvest:token');
-        console.log(error)
+        localStorage.removeItem('');
+        console.log('Ocorreu um erro')
     }
 }
 
@@ -45,7 +45,7 @@ export const verifySession = async (token) => {
         
     } catch (error) {
         console.log("Sessão inválida ou expirada. Efetuando logout...");
-        localStorage.removeItem('@radarinvest:token');
+        localStorage.removeItem('');
         return []
     }
 }
@@ -62,11 +62,10 @@ export const userRegisterDB = async (nome, cpf, tel, email, password) => {
 
         const data = res.data;
 
-        console.log(res)
         return data
         
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
@@ -78,11 +77,9 @@ export const requestChangePassword = async (email) => {
 
         const data = res.data;
 
-        console.log(res)
         return data
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
@@ -96,101 +93,125 @@ export const userChangePassword = async (newPassword, token) => {
 
         const data = res.data;
 
-        console.log(res)
         return data
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
 export const userConfirmedChangePassword = async (email, password, newPassword) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res = await api.post('/reset-password-confirmed', {
             email: email,
             senha: password,
             novaSenha: newPassword
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
 
         const data = res.data;
-        console.log(res)
-        return data
         
+        return data
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
 export const searchCompany = async (company) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res = await api.post('/search-company', {
             value: company
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
 
         const data = res.data.result;
         return data
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
 export const searchDaily = async (Symbol) => {
 
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res = await api.post('/search-daily', {
             "value": Symbol
-        });
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
+        })
 
         return res.data;
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }    
 }
 
 export const getSymbolLast = async (Symbol) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res = await api.post('/search-specific', {
             "value": Symbol
-        });
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
+        })
 
         return Object.values(res.data);
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }    
 }
 
 export const addSymbol = async (email, symbol, qnt, close) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res = await api.post('/api/stocks/buy', {
             email: email,
             symbol: symbol,
             quantity: qnt,
             price: close
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
+
         if(res.status !== 200 || res.status !== 201){
-            console.log(`${res.data}, ${res.status}`)
             throw new Error(`${res.data}, ${res.status}`);
         }
         
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
 export const removeSymbol = async (symbol) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res = await api.post('/search-remove', {
             value: symbol
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
+
         if(res.status !== 200){
             throw new Error(`${res.data}, ${res.status}`);
         }
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
@@ -198,23 +219,39 @@ export const removeSymbol = async (symbol) => {
 
 export const updateWalletInfo = async (email) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const resPerf = await api.post('/api/stocks/performance', {
             email: email
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
 
         const resVar = await api.post('/api/stocks/variation', {
             email: email
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
 
         const resProf = await api.post('/api/stocks/total-profit', {
             email: email
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
 
         const resBalance = await api.post('/api/balance', {
             email: email
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
 
-        
         const wallet = [
             resBalance.data['balance'],
             resPerf.data['performance'],
@@ -223,24 +260,27 @@ export const updateWalletInfo = async (email) => {
             resVar.data['variation_details']
         ]
         return wallet
-
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
 
 export const updateUserStocksInfo = async (email, variation_details) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res= await api.post('/api/stocks', {
             email: email
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
 
         const userStocks = res.data['acoes']
 
 
        userStocks.forEach((stock) => {
-            // Utiliza o .find() pois variation_details é um Array
             const detalhes = variation_details.find(item => item.symbol === stock.symbol);
             
             const precoCompra = stock.value;
@@ -265,12 +305,10 @@ export const updateUserStocksInfo = async (email, variation_details) => {
             }
         })
 
-        console.log(userStocks)
-
         return userStocks
 
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
@@ -284,9 +322,8 @@ export const getCurrencies = async () => {
         }
 
         return res.data
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
@@ -301,18 +338,23 @@ export const getNews = async () => {
         const data = res.data
         data.length = 10
         return data
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
 
 export const getMonthlyProfit = async (email) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res= await api.post('/api/stocks/chart', {
             email: email
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
+
         if(res.status !== 200){
             throw new Error(`${res.data}, ${res.status}`);
         }
@@ -320,19 +362,24 @@ export const getMonthlyProfit = async (email) => {
         const data = res.data
 
         return data
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
 export const getPreviewSaleInfo = async (email, symbol, quantity) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res= await api.post('/api/stocks/preview-sale', {
             'email': email,
             'symbol': symbol,
             'quantity': quantity
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
+
         if(res.status !== 200){
             throw new Error(`${res.data}, ${res.status}`);
         }
@@ -340,19 +387,24 @@ export const getPreviewSaleInfo = async (email, symbol, quantity) => {
         const data = res.data.preview
 
         return data
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
 export const getMakeSaleInfo = async (email, symbol, quantity) => {
     try {
+        const token = localStorage.getItem('@radarinvest:token');
         const res= await api.post('/api/stocks/make-sale', {
             'email': email,
             'symbol': symbol,
             'quantity': quantity
+        },{ 
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            } 
         })
+
         if(res.status !== 200){
             throw new Error(`${res.data}, ${res.status}`);
         }
@@ -360,9 +412,8 @@ export const getMakeSaleInfo = async (email, symbol, quantity) => {
         const data = res.data.preview
 
         return data
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }
 
@@ -379,8 +430,7 @@ export const getEmailValidation = async (email, nome) => {
         }
 
         return res.status
-        
     } catch (error) {
-        console.log(error)
+        console.log('Ocorreu um erro')
     }
 }

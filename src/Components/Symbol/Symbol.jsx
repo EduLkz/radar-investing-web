@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import './Symbol.css'
 import FeatherIcon from 'feather-icons-react';
-import { addSymbol, getSymbolLast } from '../../api/api';
-import StockBuy from '../ModalWindows/StockBuy/StockBuy';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { getSymbolLast } from '../../api/api';
+import StockBuy from '../ModalWindows/StockBuy/StockBuy';
+import './Symbol.css';
 
 export default function Symbol( props ) {
 
@@ -11,16 +11,12 @@ export default function Symbol( props ) {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [symbolInfo, setSymbolInfo] = useState(null); 
+    // eslint-disable-next-line
     const [isLoading, setIsLoading] = useState(false);
 
     
   const isLogged = useSelector((state) => state.user.logged)
 
-
-    const executeBuy = () => {
-       
-            
-    }
 
     const openModal = async () => {
         if(!isLogged){
@@ -81,7 +77,7 @@ export default function Symbol( props ) {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 stockData={symbolInfo}
-                onConfirmBuy={executeBuy}
+                // onConfirmBuy={executeBuy}
             />
     </div>
   )

@@ -140,7 +140,6 @@
     width: 100%;
 }
 .stocks-result{
-    margin-top: 20px;
     display: flex;
     flex-direction: row;
     width: 80%;

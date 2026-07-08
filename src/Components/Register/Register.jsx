@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { addUserInfo, userLogin, updateWallet, updateStocks, userLogoff } from '../features/User/userSlice';
-import './Register.css'
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router';
-import { updateUserStocksInfo, updateWalletInfo, userLoginDB, userRegisterDB, verifySession } from '../../api/api'
+import { userRegisterDB, verifySession } from '../../api/api';
+import { addUserInfo, userLogin, userLogoff } from '../features/User/userSlice';
+import './Register.css';
 
 export default function Register() {
     const navigate = useNavigate()
-
     const dispatch = useDispatch();
 
     const [loginNome, setLoginNome] = useState('')
@@ -15,9 +14,6 @@ export default function Register() {
     const [loginTel, setLoginTel] = useState('')
     const [loginEmail, setLoginEmail] = useState('')
     const [loginPassword, setLoginPassword] = useState()
-
-    const userStocks = useSelector((state) => state.user.stocks)
-    const userinfo = useSelector((state) => state.user.info)
 
     useEffect(() => {
       const restoreSession = async () => {
@@ -42,13 +38,12 @@ export default function Register() {
     const submitHandle = async(e) =>{
         e.preventDefault();
         try{
-            const registerUser = await userRegisterDB(loginNome, loginCPF, loginTel, loginEmail, loginPassword)
+            await userRegisterDB(loginNome, loginCPF, loginTel, loginEmail, loginPassword)
             alert('Usuario cadastrado com sucesso!\n Um email para validação da sua conta foi enviado, verifique a caixa de spam!');
         } catch (error) {
             console.log(error)
             alert('Erro ao registrar usuario');
         }
-    
 
         navigate('/Login')
     }
